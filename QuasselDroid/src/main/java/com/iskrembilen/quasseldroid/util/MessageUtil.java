@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Set;
 
 public class MessageUtil {
     private static final String TAG = MessageUtil.class.getSimpleName();
@@ -65,6 +66,41 @@ public class MessageUtil {
         String highlightNickPreferenceCurrent = ctx.getResources().getStringArray(R.array.entryvalues_highlight_preference)[1];
 
         boolean preferenceNickCaseSensitive = preferences.getBoolean("perference_highlight_casesensitive",false);
+
+		// ******************************************************************************************************************
+		// ----------------------------------------- My IRC Notification filter --------------------------------------------
+		// TODO actually make this configurable
+
+		// Non channel filtering, and throw away ++ or -- stuff
+		for (String slackIgnore : new String[]{"everyone", "here", "++", "--"}) {
+			Pattern slackRegex = Pattern.compile("(^|\\W)" + Pattern.quote(slackIgnore) + "(\\W|$)", Pattern.CASE_INSENSITIVE);
+			Matcher m1 = slackRegex.matcher(msg.content);
+			if (m1.find()) {
+				return;
+			}
+		}
+
+		// Filter @channel
+		Pattern channelRegex = Pattern.compile("(^|\\W)" + Pattern.quote("channel") + "(\\W|$)", Pattern.CASE_INSENSITIVE);
+		Matcher m1 = channelRegex.matcher(msg.content);
+		if (m1.find()) {
+			for (String blockName : new String[]{"kberzinch", "ryanstrat", "noahpd", "joshting"}) {
+				if (msg.getSender().toLowerCase().contains(blockName.toLowerCase())) {
+					// 'blocked' people can't @channel me, but they can @jkamat me
+					return;
+				}
+			}
+		}
+
+		// Filter annoying people and bots away. This will stop ALL notifications, including jkamat:
+		// TODO add this for DM's too (which can't be located here).
+		for (String name : new String[]{"slackbot", "plusplus", "polly", "[bot]", "rosawa"}) {
+			if (msg.getSender().toLowerCase().contains(name.toLowerCase())) {
+				return;
+			}
+		}
+
+		// ******************************************************************************************************************
 
         // TODO: Cache this (per network)
         Network net = Client.getInstance().getNetworks().getNetworkById(msg.bufferInfo.networkId);
