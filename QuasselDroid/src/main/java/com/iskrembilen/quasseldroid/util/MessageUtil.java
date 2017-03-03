@@ -94,7 +94,7 @@ public class MessageUtil {
 
 		// Filter annoying people and bots away. This will stop ALL notifications, including jkamat:
 		// TODO add this for DM's too (which can't be located here).
-		for (String name : new String[]{"slackbot", "plusplus", "polly", "[bot]", "rosawa"}) {
+		for (String name : new String[]{"slackbot", "plusplus", "polly", "[bot]", "rosawa", "sarahstorer"}) {
 			if (msg.getSender().toLowerCase().contains(name.toLowerCase())) {
 				return;
 			}
