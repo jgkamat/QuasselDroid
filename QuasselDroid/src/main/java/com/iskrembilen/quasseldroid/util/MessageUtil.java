@@ -84,7 +84,7 @@ public class MessageUtil {
 		Pattern channelRegex = Pattern.compile("(^|\\W)" + Pattern.quote("channel") + "(\\W|$)", Pattern.CASE_INSENSITIVE);
 		Matcher m1 = channelRegex.matcher(msg.content);
 		if (m1.find()) {
-			for (String blockName : new String[]{"kberzinch", "ryanstrat", "noahpd", "joshting"}) {
+			for (String blockName : new String[]{"kberzinch", "kristapsberzinch", "ryanstrat", "noahpd", "joshting"}) {
 				if (msg.getSender().toLowerCase().contains(blockName.toLowerCase())) {
 					// 'blocked' people can't @channel me, but they can @jkamat me
 					return;
@@ -94,7 +94,7 @@ public class MessageUtil {
 
 		// Filter annoying people and bots away. This will stop ALL notifications, including jkamat:
 		// TODO add this for DM's too (which can't be located here).
-		for (String name : new String[]{"slackbot", "plusplus", "polly", "[bot]", "rosawa", "sarahstorer"}) {
+		for (String name : new String[]{"slackbot", "plusplus", "polly", "[bot]", "rosawa", "sarahstorer", "jkamat"}) {
 			if (msg.getSender().toLowerCase().contains(name.toLowerCase())) {
 				return;
 			}
